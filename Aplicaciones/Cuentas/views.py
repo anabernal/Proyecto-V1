@@ -3,28 +3,30 @@ from _decimal import InvalidOperation, Decimal
 from django.shortcuts import render
 from psycopg2._psycopg import Float
 from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView,RetrieveUpdateDestroyAPIView, UpdateAPIView
-from rest_framework.authentication import SessionAuthentication,BasicAuthentication
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView,RetrieveUpdateDestroyAPIView, UpdateAPIView
-from Aplicaciones.Cuentas.serializers import *
 from Aplicaciones.Cuentas.models import *
+from Aplicaciones.Cuentas.serializers import *
 # Create your views here.
 
 #Vistas relacionadas a Ciudad:
 class CiudadView(viewsets.ModelViewSet):
     serializer_class = ciudadSerializer
-    queryset = Ciudad.objects.all()
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
+    queryset = Ciudad.objects.all()
 class detalleCiudadView(viewsets.ModelViewSet):
     serializer_class = ciudadSerializer
     queryset = Ciudad.objects.all()
 
 class consultarAlterarCiudadView(viewsets.ModelViewSet):
     serializer_class = ciudadSerializer
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
     queryset = Ciudad.objects.all()
 # Vistas relacionadas a Movimiento
 
@@ -42,6 +44,8 @@ class detallePersonaView(viewsets.ModelViewSet):
 
 class consultarAlterarPersonaView(viewsets.ModelViewSet):
     serializer_class = personaSerializer
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
     queryset = Persona.objects.all()
 
 
@@ -57,6 +61,8 @@ class detalleClienteView(viewsets.ModelViewSet):
 
 class consultarAlterarClienteView(viewsets.ModelViewSet):
     serializer_class = clienteSerializer
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
     queryset = Cliente.objects.all()
 
 
@@ -72,6 +78,8 @@ class detalleCtaBancariaView(viewsets.ModelViewSet):
 
 class consultarAlterarCtaBancariaView(viewsets.ModelViewSet):
     serializer_class = ctaBancariaSerializer
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
     queryset = CuentaBancaria.objects.all()
 
 
@@ -88,6 +96,8 @@ class detalleMovimientoView(viewsets.ModelViewSet):
 
 class consultarAlterarMovimientoView(viewsets.ModelViewSet):
     serializer_class = movimientoSerializer
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
     queryset = Movimiento.objects.all()
 
 
