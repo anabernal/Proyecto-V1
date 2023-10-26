@@ -21,6 +21,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from Aplicaciones.Seguridad.views import TokenObtainPersonalizadoView
 
 class Protegida(APIView):
     permission_classes = [IsAuthenticated]
@@ -31,7 +32,8 @@ class Protegida(APIView):
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('Aplicaciones.Cuentas.urls')),
-    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    #path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/', TokenObtainPersonalizadoView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('protegida/', Protegida.as_view(), name='protegida')
 ]
