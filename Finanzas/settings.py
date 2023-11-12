@@ -138,7 +138,7 @@ WSGI_APPLICATION = 'Finanzas.wsgi.application'
         'HOST': '192.168.89.26',
         'PORT': '5432',
     }
-}'''
+}
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -148,7 +148,19 @@ DATABASES = {
         'HOST': os.environ.get("HOST_DB", "127.0.0.1"), #localhost
         'PORT': os.environ.get("PORT_DB", "5432") #15432,
     }
+}'''
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'finanzas-demo',
+        'USER': 'postgres',
+        'PASSWORD':'123456',
+        'HOST':'localhost',
+        'PORT':'5433',
+    }
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

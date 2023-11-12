@@ -30,3 +30,4 @@ class movimientoSerializer(serializers.ModelSerializer):
         fields=('__all__')
 
 
+

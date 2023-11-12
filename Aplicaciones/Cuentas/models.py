@@ -71,7 +71,7 @@ class Movimiento(models.Model):
     tipoMovimiento=models.CharField('Tipo Movimiento',max_length=5, choices=TIPO_MOVIMIENTO)
     saldoAnterior = models.DecimalField(max_digits=15,decimal_places=2)
     saldoActual = models.DecimalField(max_digits=15,decimal_places=2)
-    montoMovimiento= models.DecimalField(max_digits=15,decimal_places=2)
+    montoMovimiento= models.FloatField()
     cuentaOrigen = models.CharField('Cuenta Origen',max_length=50)
     cuentaDestino = models.CharField('Cuenta Destino',max_length=50)
     canal = models.CharField(max_length=15,choices=CANAL)

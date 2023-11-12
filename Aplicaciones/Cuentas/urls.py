@@ -15,10 +15,15 @@ router.register(r'consultarAlterarCiudad',consultarAlterarCiudadView)
 
 router.register(r'consultarAlterarMovimiento',consultarAlterarMovimientoView)
 
+router.register(r'consultarAlterarMovimiento',consultarAlterarMovimientoView)
+
+#router.register(r'v1/transferencias/', TransferenciasView.as_view())
 
 urlpatterns = [
     path('v1/', include(router.urls)),
     path('v1/transferencias/', TransferenciasView.as_view()),
+    path('v1/depositos/', DepositoView.as_view()),
+    path('v1/retiros/', RetiroView.as_view()),
     path('authorization/', include('rest_framework.urls')),
 
 ]
