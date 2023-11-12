@@ -18,7 +18,7 @@ router.register(r'consultarAlterarMovimiento',consultarAlterarMovimientoView)
 
 urlpatterns = [
     path('v1/', include(router.urls)),
-    path('v1/transferencias', TransferenciasView.as_view()),
+    path('v1/transferencias/', TransferenciasView.as_view()),
     path('authorization/', include('rest_framework.urls')),
 
 ]
