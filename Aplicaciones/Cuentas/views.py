@@ -56,7 +56,6 @@ class consultarAlterarMovimientoView(viewsets.ModelViewSet):
 
 
 class TransferenciasView(APIView):
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
@@ -73,13 +72,23 @@ class TransferenciasView(APIView):
         except InvalidOperation:
             return Response({'error', 'El monto a transferir es invalido'}, status.HTTP_400_BAD_REQUEST)
 
-        cuenta_origen = CuentaBancaria.objects.get(id=nro_cuenta_origen)
-        cuenta_destino = CuentaBancaria.objects.get(id=nro_cuenta_destino)
+        cuenta_origen = CuentaBancaria.objects.get(nroCuenta=nro_cuenta_origen)
+        cuenta_destino = CuentaBancaria.objects.get(nroCuenta=nro_cuenta_destino)
+        if (cuenta_origen.moneda != cuenta_destino.moneda):
+            return Response({'error', 'Cuentas deben ser de la misma moneda'}, status.HTTP_400_BAD_REQUEST)
+
+        if (cuenta_origen.estado == 'BLOQUEADO'):
+            return Response({'error', 'Cuenta origen esta bloqueada'}, status.HTTP_400_BAD_REQUEST)
+
+        if (cuenta_destino.estado == 'BLOQUEADO'):
+            return Response({'error', 'Cuenta Destino esta bloqueada'}, status.HTTP_400_BAD_REQUEST)
 
         if (cuenta_origen.saldo < monto):
             return Response({'error', 'Saldo insuficiente'}, status.HTTP_400_BAD_REQUEST)
 
         # realizar la transferencia
+        saldo_anterior_origen = cuenta_origen.saldo
+        saldo_anterior_destino = cuenta_destino.saldo
         cuenta_origen.saldo -= monto
         cuenta_destino.saldo += monto
 
@@ -89,7 +98,7 @@ class TransferenciasView(APIView):
         # registrar movimiento
         Movimiento.objects.create(cuenta=cuenta_origen,
                                   tipoMovimiento='DEB',
-                                  saldoAnterior=cuenta_origen.saldo + monto,
+                                  saldoAnterior=saldo_anterior_origen,
                                   saldoActual=cuenta_origen.saldo,
                                   montoMovimiento=monto,
                                   cuentaOrigen=nro_cuenta_origen,
@@ -97,7 +106,7 @@ class TransferenciasView(APIView):
                                   canal='APP')
         Movimiento.objects.create(cuenta=cuenta_destino,
                                   tipoMovimiento='CRED',
-                                  saldoAnterior=cuenta_destino.saldo - monto,
+                                  saldoAnterior=saldo_anterior_destino,
                                   saldoActual=cuenta_destino.saldo,
                                   montoMovimiento=monto,
                                   cuentaOrigen=nro_cuenta_origen,
@@ -108,15 +117,14 @@ class TransferenciasView(APIView):
 
 
 class DepositoView(APIView):
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        nro_cuenta_origen = request.data.get('nro_cuenta_origen')
+        nro_cuenta_destino = request.data.get('nro_cuenta_destino')
         monto = request.data.get('monto')
 
         # validaciones
-        if not all([nro_cuenta_origen, monto]):
+        if not all([nro_cuenta_destino, monto]):
             return Response({'error': 'La solicitud no contiene los datos necesarios'},
                             status=status.HTTP_400_BAD_REQUEST)
         try:
@@ -124,27 +132,26 @@ class DepositoView(APIView):
         except InvalidOperation:
             return Response({'error', 'El monto a depositar es invalido'}, status.HTTP_400_BAD_REQUEST)
 
-        cuenta_origen = CuentaBancaria.objects.get(id=nro_cuenta_origen)
-        cuenta_destino = CuentaBancaria.objects.get(id=nro_cuenta_origen)
-
+        cuenta_destino = CuentaBancaria.objects.get(nroCuenta=nro_cuenta_destino)
+        if (cuenta_destino.estado == 'BLOQUEADO'):
+            return Response({'error', 'La cuenta esta Bloqueada'}, status.HTTP_400_BAD_REQUEST)
 
         # registrar movimiento
-        Movimiento.objects.create(cuenta=cuenta_origen,
+        Movimiento.objects.create(cuenta=cuenta_destino,
                                   tipoMovimiento='DEP',
-                                  saldoAnterior=cuenta_origen.saldo,
-                                  saldoActual= cuenta_origen.saldo + monto,
+                                  saldoAnterior=cuenta_destino.saldo,
+                                  saldoActual= cuenta_destino.saldo + monto,
                                   montoMovimiento=monto,
-                                  cuentaOrigen=nro_cuenta_origen,
-                                  cuentaDestino=nro_cuenta_origen,
+                                  cuentaOrigen=cuenta_destino,
+                                  cuentaDestino=cuenta_destino,
                                   canal='APP')
-        cuenta_origen.saldo += monto
-        cuenta_origen.save()
-        return Response({'message', 'Transferencia realizada con exito'}, status.HTTP_200_OK)
+        cuenta_destino.saldo += monto
+        cuenta_destino.save()
+        return Response({'message', 'Deposito realizado con exito'}, status.HTTP_200_OK)
 
 
 
 class RetiroView(APIView):
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
@@ -161,27 +168,31 @@ class RetiroView(APIView):
             return Response({'error', 'El monto a retirar es invalido'}, status.HTTP_400_BAD_REQUEST)
 
 
-        cuenta_origen = CuentaBancaria.objects.get(id=nro_cuenta_origen)
-        cuenta_destino = CuentaBancaria.objects.get(id=nro_cuenta_origen)
+        cuenta_origen = CuentaBancaria.objects.get(nroCuenta=nro_cuenta_origen)
+
 
         if (cuenta_origen.saldo < monto):
             return Response({'error', 'Saldo insuficiente para retirar el monto ingresado'}, status.HTTP_400_BAD_REQUEST)
 
-        # realizar el retiro
+        if (cuenta_origen.estado == 'BLOQUEADO'):
+            return Response({'error', 'Cuenta Bloqueada'}, status.HTTP_400_BAD_REQUEST)
 
+        # realizar el retiro
+        saldo_anterior = cuenta_origen.saldo
+        cuenta_origen.saldo -= monto
+        cuenta_origen.save()
 
         # registrar movimiento
         Movimiento.objects.create(cuenta=cuenta_origen,
                                   tipoMovimiento='RET',
-                                  saldoAnterior=cuenta_origen.saldo,
-                                  saldoActual= cuenta_origen.saldo - monto,
+                                  saldoAnterior=saldo_anterior,
+                                  saldoActual= cuenta_origen.saldo,
                                   montoMovimiento=monto,
                                   cuentaOrigen=nro_cuenta_origen,
                                   cuentaDestino=nro_cuenta_origen,
                                   canal='APP')
-        cuenta_origen.saldo -= monto
-        cuenta_origen.save()
-        return Response({'message', 'Transferencia realizada con exito'}, status.HTTP_200_OK)
+
+        return Response({'message', 'Retiro realizado con exito'}, status.HTTP_200_OK)
 
 
 
