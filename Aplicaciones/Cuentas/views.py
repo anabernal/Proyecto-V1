@@ -9,8 +9,8 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView,RetrieveUpdateDestroyAPIView, UpdateAPIView
-from Aplicaciones.Cuentas.models import *
-from Aplicaciones.Cuentas.serializers import *
+from .models import Ciudad, Persona, Cliente, CuentaBancaria, Movimiento
+from .serializers import *
 # Create your views here.
 
 #Vistas relacionadas a Ciudad:
@@ -102,10 +102,12 @@ class consultarAlterarMovimientoView(viewsets.ModelViewSet):
 
 
 class TransferenciasView(APIView):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
     def post(self, request):
         nro_cuenta_origen = request.data.get('nro_cuenta_origen')
         nro_cuenta_destino=request.data.get('nro_cuenta_destino')
-        monto= request.data.get('monto')
+        monto=request.data.get('monto')
 
         #validaciones
         if not all([nro_cuenta_origen, nro_cuenta_destino,monto]):
@@ -115,8 +117,8 @@ class TransferenciasView(APIView):
         except InvalidOperation:
             return Response({'error', 'El monto a transferir es invalido'}, status.HTTP_400_BAD_REQUEST)
 
-        cuenta_origen= CuentaBancaria.objects.get(nro_cuenta=nro_cuenta_origen)
-        cuenta_destino = CuentaBancaria.objects.get(nro_cuenta=nro_cuenta_destino)
+        cuenta_origen= CuentaBancaria.objects.get(id=nro_cuenta_origen)
+        cuenta_destino = CuentaBancaria.objects.get(id=nro_cuenta_destino)
 
         if(cuenta_origen.saldo<monto):
             return Response({'error', 'Saldo insuficiente'}, status.HTTP_400_BAD_REQUEST)
@@ -131,15 +133,19 @@ class TransferenciasView(APIView):
         #registrar movimiento
         Movimiento.objects.create(cuenta=cuenta_origen,
                                   tipoMovimiento='DEB',
-                                  monto_movimiento=monto,
-                                  cuenta_origen=nro_cuenta_origen,
-                                  cuenta_destino=nro_cuenta_destino,
+                                  saldoAnterior=cuenta_origen.saldo+monto,
+                                  saldoActual=cuenta_origen.saldo,
+                                  montoMovimiento=monto,
+                                  cuentaOrigen=nro_cuenta_origen,
+                                  cuentaDestino=nro_cuenta_destino,
                                   canal='APP')
-        Movimiento.objects.create(cuenta=cuenta_origen,
+        Movimiento.objects.create(cuenta=cuenta_destino,
                                   tipoMovimiento='CRED',
-                                  monto_movimiento=monto,
-                                  cuenta_origen=nro_cuenta_origen,
-                                  cuenta_destino=nro_cuenta_destino,
+                                  saldoAnterior=cuenta_destino.saldo-monto,
+                                  saldoActual=cuenta_destino.saldo,
+                                  montoMovimiento=monto,
+                                  cuentaOrigen=nro_cuenta_origen,
+                                  cuentaDestino=nro_cuenta_destino,
                                   canal='APP')
 
         return Response({'message', 'Transferencia realizada con exito'}, status.HTTP_200_OK)
