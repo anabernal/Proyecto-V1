@@ -77,6 +77,9 @@ class TransferenciasView(APIView):
         if (cuenta_origen.moneda != cuenta_destino.moneda):
             return Response({'error', 'Cuentas deben ser de la misma moneda'}, status.HTTP_400_BAD_REQUEST)
 
+        if (cuenta_origen.tipoCuenta != cuenta_destino.tipoCuenta):
+            return Response({'error', 'Las cuentas deben ser del mismo tipo'}, status.HTTP_400_BAD_REQUEST)
+
         if (cuenta_origen.estado == 'BLOQUEADO'):
             return Response({'error', 'Cuenta origen esta bloqueada'}, status.HTTP_400_BAD_REQUEST)
 
@@ -85,6 +88,9 @@ class TransferenciasView(APIView):
 
         if (cuenta_origen.saldo < monto):
             return Response({'error', 'Saldo insuficiente'}, status.HTTP_400_BAD_REQUEST)
+
+        if (cuenta_origen.estado != 'ACTIVA' or cuenta_destino.estado != 'ACTIVA'):
+            return Response({'error', 'Ambas cuentas deben estar activas'}, status.HTTP_400_BAD_REQUEST)
 
         # realizar la transferencia
         saldo_anterior_origen = cuenta_origen.saldo
@@ -169,6 +175,8 @@ class RetiroView(APIView):
 
 
         cuenta_origen = CuentaBancaria.objects.get(nroCuenta=nro_cuenta_origen)
+        if (cuenta_origen.estado == 'BLOQUEADO'):
+            return Response({'error', 'La cuenta está bloqueada'}, status.HTTP_400_BAD_REQUEST)
 
 
         if (cuenta_origen.saldo < monto):
