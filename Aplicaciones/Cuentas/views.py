@@ -20,15 +20,16 @@ from .serializers import *
 # Vistas relacionadas a Ciudad:
 class consultarAlterarCiudadView(viewsets.ModelViewSet):
     serializer_class = ciudadSerializer
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
     queryset = Ciudad.objects.all()
-    permission_classes = [IsAuthenticated]
 
 
 ##################################################################################################################
 # Vistas relacionadas a Persona
 class consultarAlterarPersonaView(viewsets.ModelViewSet):
     serializer_class = personaSerializer
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
     queryset = Persona.objects.all()
 
@@ -36,6 +37,7 @@ class consultarAlterarPersonaView(viewsets.ModelViewSet):
 # Vistas relacionadas a Cliente
 class consultarAlterarClienteView(viewsets.ModelViewSet):
     serializer_class = clienteSerializer
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
     queryset = Cliente.objects.all()
 
@@ -44,6 +46,7 @@ class consultarAlterarClienteView(viewsets.ModelViewSet):
 
 class consultarAlterarCtaBancariaView(viewsets.ModelViewSet):
     serializer_class = ctaBancariaSerializer
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
     queryset = CuentaBancaria.objects.all()
 
@@ -51,11 +54,13 @@ class consultarAlterarCtaBancariaView(viewsets.ModelViewSet):
 # Vistas relacionadas a Movimiento
 class consultarAlterarMovimientoView(viewsets.ModelViewSet):
     serializer_class = movimientoSerializer
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
     queryset = Movimiento.objects.all()
 
 
 class TransferenciasView(APIView):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
@@ -123,6 +128,7 @@ class TransferenciasView(APIView):
 
 
 class DepositoView(APIView):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
@@ -158,6 +164,7 @@ class DepositoView(APIView):
 
 
 class RetiroView(APIView):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
