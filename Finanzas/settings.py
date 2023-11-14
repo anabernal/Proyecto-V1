@@ -138,19 +138,19 @@ WSGI_APPLICATION = 'Finanzas.wsgi.application'
         'HOST': '192.168.89.26',
         'PORT': '5432',
     }
-}
+}'''
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get("DATABASE", "finanzas-demo"), #'Hospital-django',
-        'USER': os.environ.get("USER_DB", "postgres"), #postgres
-        'PASSWORD': os.environ.get("PASS_DB", "1902"), #12345
-        'HOST': os.environ.get("HOST_DB", "127.0.0.1"), #localhost
-        'PORT': os.environ.get("PORT_DB", "5432") #15432,
+        'NAME': os.environ.get("DATABASE", "finanzas-demo"),
+        'USER': os.environ.get("USER_DB", "postgres"),
+        'PASSWORD': os.environ.get("PASS_DB", "1902"),
+        'HOST': os.environ.get("HOST_DB", "127.0.0.1"),
+        'PORT': os.environ.get("PORT_DB", "5432"),
     }
-}'''
+}
 
-DATABASES = {
+'''DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'finanzas-demo',
@@ -160,7 +160,7 @@ DATABASES = {
         'PORT':'5433',
     }
 }
-
+'''
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

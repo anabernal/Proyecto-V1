@@ -35,5 +35,6 @@ urlpatterns = [
     #path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/', TokenObtainPersonalizadoView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('protegida/', Protegida.as_view(), name='protegida')
+    path('protegida/', Protegida.as_view(), name='protegida'),
+    #path('authorization/', include('rest_framework.urls'))
 ]
