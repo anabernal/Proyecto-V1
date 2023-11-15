@@ -22,7 +22,7 @@ class Persona (models.Model):
         return f"{self.id} - {self.nombre} {self.apellido}"
 
 class Cliente (models.Model):
-    persona = models.ForeignKey(Persona,on_delete=models.CASCADE)
+    persona = models.ForeignKey(Persona,related_name='persona',on_delete=models.CASCADE)
     fechaIngreso=models.DateTimeField()
     calificacion=models.CharField(max_length=100)
     estado = models.CharField(max_length=100)
@@ -30,7 +30,7 @@ class Cliente (models.Model):
         return f"{self.persona}"
 
 class CuentaBancaria(models.Model):
-    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
+    cliente = models.ForeignKey(Cliente,related_name='cliente', on_delete=models.CASCADE)
     nroCuenta = models.CharField('Numero de Cuenta',max_length=100, unique=True)
     fechaAlta=models.DateTimeField
     TIPO_CUENTA = [
@@ -71,7 +71,7 @@ class Movimiento(models.Model):
         ('CAJERO', 'CAJERO'),
         ('APP', 'APP'),
     ]
-    cuenta=models.ForeignKey(CuentaBancaria, on_delete=models.CASCADE)
+    cuenta=models.ForeignKey(CuentaBancaria, related_name='movimiento', on_delete=models.CASCADE)
     fechaMovimiento=models.DateTimeField(auto_now_add=True)
     tipoMovimiento=models.CharField('Tipo Movimiento',max_length=5, choices=TIPO_MOVIMIENTO)
     saldoAnterior = models.DecimalField(max_digits=15,decimal_places=2)
@@ -80,6 +80,17 @@ class Movimiento(models.Model):
     cuentaOrigen = models.CharField('Cuenta Origen',max_length=50)
     cuentaDestino = models.CharField('Cuenta Destino',max_length=50)
     canal = models.CharField(max_length=15,choices=CANAL)
+    def __str__(self):
+        return " Tipo Movimiento: " + self.tipoMovimiento + \
+        " Fecha Hora: " + \
+        str(self.fechaMovimiento.strftime("%Y%m%d-%H:%M:%S"))+ \
+        " Saldo Anterior: " + \
+        str(self.saldoAnterior) + \
+        " Monto: " + \
+        str(self.montoMovimiento) + \
+        " Saldo: " + \
+        str(self.saldoActual)
+
 
 
 

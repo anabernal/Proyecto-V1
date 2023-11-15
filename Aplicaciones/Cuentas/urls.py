@@ -26,4 +26,16 @@ urlpatterns = [
     path('v1/retiros/', RetiroView.as_view()),
     path('authorization/', include('rest_framework.urls')),
 
+    path('listar-persona/', listarPersonaView.as_view()),
+    path('registrar-persona', registrarPersonaView.as_view()),
+    path('buscar-persona/<kword>/', buscarPersonaView.as_view()),
+    path('modificar-persona/<pk>/', modificarPersonaView.as_view()),
+    path('listar-cuenta/', listarCuentaView.as_view()),
+    path('registrar-cuenta', registrarCuentaView.as_view()),
+    path('buscar-cuenta/<kword>/', buscarCuentaView.as_view()),
+    path('modificar-cuenta/<pk>/', modificarCuentaView.as_view()),
+    path('modificar-cuenta/<pk>/', modificarCuentaView.as_view()),
+    path('historico-movimiento/<cuenta_id>/', historicoMovimientoView.as_view()),
+    path('imprimir-extracto/<cliente_id>/', imprimirExtractoView.as_view()),
+
 ]

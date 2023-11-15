@@ -210,7 +210,91 @@ class RetiroView(APIView):
         return Response({'message', 'Retiro realizado con exito'}, status.HTTP_200_OK)
 
 
+##################################################################################################################
+# Utilizando ListAPIView para Impresion de Extracto
+#   
+class imprimirExtractoView(ListAPIView):
+  
+    serializer_class = imprimirExtractoSerializer
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
 
+    def get_queryset (self):
+        return CuentaBancaria.objects.filter(
+            cliente_id = self.kwargs['cliente_id']
+        )
+##################################################################################################################
+#CRUD con ListAPIView, CreateAPIView, RetrieveUpdateDestroyAPIView de Persona  
+
+class listarPersonaView(ListAPIView):
+    serializer_class = personaSerializer
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+    queryset = Persona.objects.all()
+    
+class registrarPersonaView(CreateAPIView):
+    serializer_class = personaSerializer
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+    queryset = Persona.objects.all()
+
+class buscarPersonaView(ListAPIView):
+    serializer_class = personaSerializer
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+    def get_queryset (self):
+        return Persona.objects.filter(
+            nombre__icontains = self.kwargs['kword']
+        )
+class modificarPersonaView(RetrieveUpdateDestroyAPIView):
+    serializer_class = personaSerializer
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+    queryset = Persona.objects.all()
+
+
+##################################################################################################################
+#CRUD con ListAPIView, CreateAPIView, RetrieveUpdateDestroyAPIView de CuentaBancaria  
+
+class listarCuentaView(ListAPIView):
+    serializer_class = ctaBancariaSerializer
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+    queryset = CuentaBancaria.objects.all()
+    
+class registrarCuentaView(CreateAPIView):
+    serializer_class = ctaBancariaSerializer
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+    queryset = CuentaBancaria.objects.all()
+
+class buscarCuentaView(ListAPIView):
+    serializer_class = ctaBancariaSerializer
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+    def get_queryset (self):
+        return CuentaBancaria.objects.filter(
+            nroCuenta = self.kwargs['kword']
+        )
+class modificarCuentaView(RetrieveUpdateDestroyAPIView):
+    serializer_class = ctaBancariaSerializer
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+    queryset = CuentaBancaria.objects.all()
+
+##################################################################################################################
+# Utilizando ListAPIView de Moviemiento
+#   
+class historicoMovimientoView(ListAPIView):
+  
+    serializer_class = movimientoSerializer
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset (self):
+        return Movimiento.objects.filter(
+            cuenta_id = self.kwargs['cuenta_id']
+        )
 
 
 
