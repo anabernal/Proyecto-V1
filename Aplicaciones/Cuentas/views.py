@@ -20,7 +20,7 @@ from .serializers import *
 # Vistas relacionadas a Ciudad:
 class consultarAlterarCiudadView(viewsets.ModelViewSet):
     serializer_class = ciudadSerializer
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    #authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
     queryset = Ciudad.objects.all()
 
@@ -29,7 +29,7 @@ class consultarAlterarCiudadView(viewsets.ModelViewSet):
 # Vistas relacionadas a Persona
 class consultarAlterarPersonaView(viewsets.ModelViewSet):
     serializer_class = personaSerializer
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    #authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
     queryset = Persona.objects.all()
 
@@ -37,7 +37,7 @@ class consultarAlterarPersonaView(viewsets.ModelViewSet):
 # Vistas relacionadas a Cliente
 class consultarAlterarClienteView(viewsets.ModelViewSet):
     serializer_class = clienteSerializer
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    #authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
     queryset = Cliente.objects.all()
 
@@ -46,7 +46,7 @@ class consultarAlterarClienteView(viewsets.ModelViewSet):
 
 class consultarAlterarCtaBancariaView(viewsets.ModelViewSet):
     serializer_class = ctaBancariaSerializer
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    #authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
     queryset = CuentaBancaria.objects.all()
 
@@ -54,13 +54,13 @@ class consultarAlterarCtaBancariaView(viewsets.ModelViewSet):
 # Vistas relacionadas a Movimiento
 class consultarAlterarMovimientoView(viewsets.ModelViewSet):
     serializer_class = movimientoSerializer
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    #authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
     queryset = Movimiento.objects.all()
 
 
 class TransferenciasView(APIView):
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    #authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
@@ -94,7 +94,7 @@ class TransferenciasView(APIView):
         if (cuenta_origen.saldo < monto):
             return Response({'error', 'Saldo insuficiente'}, status.HTTP_400_BAD_REQUEST)
 
-        if (cuenta_origen.estado != 'ACTIVA' or cuenta_destino.estado != 'ACTIVA'):
+        if (cuenta_origen.estado != 'ACTIVO' or cuenta_destino.estado != 'ACTIVO'):
             return Response({'error', 'Ambas cuentas deben estar activas'}, status.HTTP_400_BAD_REQUEST)
 
         # realizar la transferencia
@@ -128,7 +128,7 @@ class TransferenciasView(APIView):
 
 
 class DepositoView(APIView):
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    #authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
@@ -164,7 +164,7 @@ class DepositoView(APIView):
 
 
 class RetiroView(APIView):
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    #authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
@@ -216,7 +216,7 @@ class RetiroView(APIView):
 class imprimirExtractoView(ListAPIView):
   
     serializer_class = imprimirExtractoSerializer
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    #authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get_queryset (self):
@@ -228,19 +228,19 @@ class imprimirExtractoView(ListAPIView):
 
 class listarPersonaView(ListAPIView):
     serializer_class = personaSerializer
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    #authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
     queryset = Persona.objects.all()
     
 class registrarPersonaView(CreateAPIView):
     serializer_class = personaSerializer
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    #authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
     queryset = Persona.objects.all()
 
 class buscarPersonaView(ListAPIView):
     serializer_class = personaSerializer
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    #authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
     def get_queryset (self):
         return Persona.objects.filter(
@@ -248,7 +248,7 @@ class buscarPersonaView(ListAPIView):
         )
 class modificarPersonaView(RetrieveUpdateDestroyAPIView):
     serializer_class = personaSerializer
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    #authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
     queryset = Persona.objects.all()
 
@@ -258,19 +258,19 @@ class modificarPersonaView(RetrieveUpdateDestroyAPIView):
 
 class listarCuentaView(ListAPIView):
     serializer_class = ctaBancariaSerializer
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    #authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
     queryset = CuentaBancaria.objects.all()
     
 class registrarCuentaView(CreateAPIView):
     serializer_class = ctaBancariaSerializer
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    #authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
     queryset = CuentaBancaria.objects.all()
 
 class buscarCuentaView(ListAPIView):
     serializer_class = ctaBancariaSerializer
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    #authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
     def get_queryset (self):
         return CuentaBancaria.objects.filter(
@@ -278,7 +278,7 @@ class buscarCuentaView(ListAPIView):
         )
 class modificarCuentaView(RetrieveUpdateDestroyAPIView):
     serializer_class = ctaBancariaSerializer
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    #authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
     queryset = CuentaBancaria.objects.all()
 
@@ -288,7 +288,7 @@ class modificarCuentaView(RetrieveUpdateDestroyAPIView):
 class historicoMovimientoView(ListAPIView):
   
     serializer_class = movimientoSerializer
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    #authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get_queryset (self):
