@@ -15,7 +15,7 @@ class personaSerializer(serializers.ModelSerializer):
         fields=('__all__')
 
 class clienteSerializer(serializers.ModelSerializer):
-    persona = serializers.SlugRelatedField(queryset=Persona.objects.all(), slug_field='nombre') 
+    #persona = serializers.SlugRelatedField(queryset=Persona.objects.all(), slug_field='nroDocumento')
     class Meta:
         model= Cliente
         fields=('__all__')
